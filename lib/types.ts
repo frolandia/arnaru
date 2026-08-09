@@ -1,6 +1,36 @@
+export interface OpenAITextPart {
+  type: 'text';
+  text: string;
+}
+
+export interface OpenAIImageUrlPart {
+  type: 'image_url';
+  image_url: {
+    url: string; // data:<mime>;base64,<data>  atau  http(s)://...
+    detail?: string;
+  };
+}
+
+export interface OpenAIFilePart {
+  type: 'file';
+  file: {
+    filename?: string;
+    file_data?: string; // data:<mime>;base64,<data>
+    file_id?: string;
+  };
+}
+
+export type OpenAIContentPart = OpenAITextPart | OpenAIImageUrlPart | OpenAIFilePart;
+
 export interface OpenAIMessage {
   role: 'system' | 'user' | 'assistant';
-  content: string;
+  content: string | OpenAIContentPart[];
+}
+
+export interface ArnaruFileAttachment {
+  buffer: Buffer;
+  filename: string;
+  mimeType: string;
 }
 
 export interface OpenAIChatRequest {
