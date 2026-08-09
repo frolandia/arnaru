@@ -1,7 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { OpenAIChatRequest } from '../../../lib/types';
 import { parseSSE, parseSSEStream } from '../../../lib/sse-parser';
-import { buildArnaruRequest, callArnaruChat, generateId, getTimestamp } from '../../../lib/arnaru';
+import { buildArnaruRequest, callArnaruChat, callArnaruChatWithFiles, generateId, getTimestamp } from '../../../lib/arnaru';
+
+// Vercel akan otomatis parse JSON body; naikkan batas ukuran untuk payload gambar base64.
+// Catatan: platform Vercel Serverless Functions punya hard cap ~4.5MB per request
+// (tidak bisa dilewati lewat config ini), jadi gambar besar sebaiknya dikompres dulu di client.
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb'
+    }
+  }
+};
 
 const VALID_MODELS = new Set([
   'claude-fable-5','claude-haiku-4.5','claude-opus-4.6','claude-opus-4.7','claude-opus-4.8',
@@ -76,8 +87,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const isStream = body.stream === true;
     const model = validateModel(body.model || '');
     const requestId = generateId();
-    const arnaruBody = buildArnaruRequest({ ...body, model });
-    const arnaruResponse = await callArnaruChat(arnaruBody);
+    const { arnaruBody, files } = await buildArnaruRequest({ ...body, model });
+    const arnaruResponse = files.length > 0
+      ? await callArnaruChatWithFiles(arnaruBody, files)
+      : await callArnaruChat(arnaruBody);
 
     if (!arnaruResponse.ok) {
       const errorText = await arnaruResponse.text();
