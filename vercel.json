@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/v1/chat/completions",
+      "dest": "/api/v1/chat/completions.ts"
+    },
+    {
+      "src": "/v1/models",
+      "dest": "/api/v1/models.ts"
+    },
+    {
+      "src": "/",
+      "dest": "/api/v1/chat/completions.ts"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}
