@@ -10,10 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
+    "moduleResolution": "node"
   },
   "include": ["api/**/*", "lib/**/*"],
   "exclude": ["node_modules", "dist"]

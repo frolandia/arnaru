@@ -1,11 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "rewrites": [
     {
       "source": "/v1/chat/completions",
@@ -14,6 +8,10 @@
     {
       "source": "/v1/models",
       "destination": "/api/v1/models"
+    },
+    {
+      "source": "/health",
+      "destination": "/api/health"
     },
     {
       "source": "/(.*)",
