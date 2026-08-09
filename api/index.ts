@@ -12,10 +12,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     status: 'ok',
     proxy: 'arnaru-openai-proxy',
     version: '1.0.0',
-    endpoints: {
-      chat: { path: '/v1/chat/completions', method: 'POST' },
-      models: { path: '/v1/models', method: 'GET' }
-    },
-    message: 'Proxy is running. Send POST to /v1/chat/completions with OpenAI-compatible body.'
+    endpoints: [
+      { path: '/v1/chat/completions', method: 'POST', description: 'OpenAI-compatible chat' },
+      { path: '/v1/models', method: 'GET', description: 'List available models' },
+      { path: '/health', method: 'GET', description: 'Health check' }
+    ],
+    message: 'Proxy is running. Use /v1/chat/completions for chat.'
   });
 }
